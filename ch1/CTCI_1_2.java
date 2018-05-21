@@ -40,6 +40,6 @@ public class MyClass {
             }
         }
         
-        return map.isEmpty() ? true : false; 
-    }
+        return map.isEmpty() ? true : false;  //total O(n) time, O(n) space 
+     }
 }
