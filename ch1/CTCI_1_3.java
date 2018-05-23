@@ -1,6 +1,8 @@
 public class MyClass {
     public static void main(String args[]) {
-        
+
+	//something good to know --> new String(arr, offset, length_subarray); creates string based off subarray      
+  
         //replace spaces with %20, convert to char array, do the algorithm in-place, then type case to string and return 
         //we can assume the string input has enough spaces at the end 
         //here i assume there is one space between the words 
