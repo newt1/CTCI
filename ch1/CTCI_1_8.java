@@ -3,6 +3,8 @@ import java.util.*;
 public class MyClass {
     public static void main(String args[]) {
         
+        //this version uses O(1) space, we use the top row, and the first column as reference
+        
         int[][] arr = { {1,1,1,0}, {1,0,1,1}, {1,1,1,1}, {1,1,0,1} }; 
         zeroMatrix(arr); 
 
@@ -12,30 +14,37 @@ public class MyClass {
     public static void zeroMatrix(int[][] arr) { 
         if(arr == null) return; 
         
-        
-        HashSet<Integer> setRows = new HashSet<Integer>(); 
-        HashSet<Integer> setCols = new HashSet<Integer>(); 
-        
         //find zeros 
         for(int i=0; i<arr.length; i++) { 
             for(int j=0; j<arr[0].length; j++) { 
                 if(arr[i][j] == 0) { 
-                    setRows.add(i);
-                    setCols.add(j);
+                    arr[i][0] = 0; 
+                    arr[0][j] = 0; 
                 }
             }
         }
         
+        
         //make zero matrix 
-        for(Integer key : setRows) { 
-            for(int j=0; j<arr[0].length; j++) { 
-                arr[key][j] = 0;    
-            }
+        for(int i=1; i<arr.length; i++) {       //fill rows 
+            if(arr[i][0] == 0) {
+                for(int j=1; j<arr[0].length; j++) { 
+                    arr[i][j] = 0;    
+                }
+            }   
         }
         
-        for(Integer key : setCols) { 
-            for(int i=0; i<arr.length; i++) { 
-                arr[i][key] = 0;    
+        for(int j=1; j<arr.length; j++) {   //fill columns 
+            if(arr[0][j] == 0) {    
+                for(int i=1; i<arr.length; i++) { 
+                    arr[i][j] = 0;    
+                }
+            }   
+        }
+        
+        if(arr[0][0] == 0) { 
+            for(int j=1; j<arr[0].length; j++) { 
+                arr[0][j] = 0;   
             }
         }
         
