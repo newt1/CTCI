@@ -23,7 +23,7 @@ public class MyClass {
     }
     
     public static ListNode partition(ListNode node, int partition) { 
-        if(node == null) return null; 
+        if(node == null || node.next == null) return node; 
         
         ListNode current = node;
         ListNode ans = node; 
@@ -31,11 +31,13 @@ public class MyClass {
         while(current.next != null) { 
             
             if(current.next.data < partition) { 
-                ListNode temp = new ListNode(current.next.data); 
+                ListNode temp = current.next; 
+                ListNode tempNext = temp.next; 
+                current.next = tempNext; 
+                
                 temp.next = ans; 
                 ans = temp; 
                 
-                current.next = current.next.next; 
                 continue;   //stay at same index to check for next
             }
             current = current.next;    
