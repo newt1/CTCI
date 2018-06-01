@@ -1,105 +1,113 @@
 public class MyClass {
     public static void main(String args[]) {
-        
-        Stack stack = new Stack(); 
-        stack.push(5); 
-        stack.push(1);
-        stack.push(3);
-        stack.push(2);
-        stack.push(0);
-        System.out.println(stack.getMin() != null ? stack.getMin().data : null);
-        
-        stack.pop(); 
-        System.out.println(stack.getMin() != null ? stack.getMin().data : null);
-
-        stack.pop();
-        System.out.println(stack.getMin() != null ? stack.getMin().data : null);
-
-        stack.pop();
-        System.out.println(stack.getMin() != null ? stack.getMin().data : null);
-
-        stack.pop(); 
-        System.out.println(stack.getMin() != null ? stack.getMin().data : null);
-
-        stack.pop(); 
-        System.out.println(stack.getMin() != null ? stack.getMin().data : null);
-
-
-        System.out.println(stack.top);
+    		SetOfStacks set = new SetOfStacks(); 
+    		//we assume the stacks are limited to size of 10, the set of stacks is represented as a linked list 
+    		//of stacks, so popAt will be a O(N) operation
+    		
+    		for(int i=1; i<25; i++) { 
+    			set.push(i);
+    		}
+    		
+    		for(int i=0; i<9; i++) { 
+    			set.popAt(1);
+    		}
+    		
+    		set.popAt(1);
+    		
+    		for(int i=0; i<9; i++) { 
+    			set.popAt(1);
+    		}
+    		
+    		set.popAt(1);
+    		
+    		System.out.println(set.getTop());
     }
     
-
 }
 
-class MinStack { 
-	int size; 
-	Node top; 
-	
-	public MinStack() { 
-		this.size = 0; 
-		this.top = null;
-	}
+class SetOfStacks { 
+    int numberOfStacks; 
+    Stack head; 
+    
+    public SetOfStacks() { 
+        this.numberOfStacks = 0; 
+    }
+    
+    public void push(int data) { 
+        if(head == null) { 
+            head = new Stack(); 
+            
+            pushHelper(head, data);
+            this.numberOfStacks++;
+            
+        } else if (head.size == 10) { 
+            Stack temp = new Stack(); 
+            temp.next = head; 
+            head = temp; 
+            
+            pushHelper(head, data);
+            this.numberOfStacks++;
+            
+        } else { 
+            pushHelper(head, data);
+        }
+    }
+    
+    public static void pushHelper(Stack head, int data) { 
+        head.contents[ head.contents.length-1 - head.size ] = data; 
+        head.size++; 
+    }
+    
+    
+    public int getTop() { 
+        return head.contents[head.contents.length - head.size];    
+    }
+    
+    public void pop() { 
+        if(head == null) return; 
+        
+        if(head.size == 1) { 
+            head = head.next; 
+            numberOfStacks--;
+        } else { 
+            head.contents[head.contents.length - head.size] = 0;
+            head.size--; 
+        }
+    }
+    
+    public void popAt(int index) {  //note that nothing will pop if index is over bound
+    		if(head == null || index < 0) return; 
+    		
+    		if(index == 0) { 
+    			pop(); 
+    		} else { 
+    			Stack current = head; 
+    			
+    			while(current != null && current.next != null) { 
+    				if(index-1 == 0) { 
+    					if(current.next.size == 1) { 
+    						current.next = current.next.next; 
+    						numberOfStacks--;
+    					} else { 
+    						current.next.contents[current.next.contents.length - current.next.size] = 0;
+    			            current.next.size--; 
+    					}
+    				}
+    				index--; 
+    				current = current.next;
+    			}	
+    		}
+    }
 }
 
 class Stack { 
     int size; 
-    Node top; 
-    MinStack minStack = new MinStack(); 
+    int[] contents;
+    Stack next; 
     
     public Stack() { 
+        this.contents = new int[10];
         this.size = 0; 
-        this.top = null; 
-    }
-    
-    public void push(int data) { 
-        if(this.top == null) { 
-            this.top = new Node(data); 
-            this.minStack.top = new Node(data); 
-            this.minStack.size++; 
-            this.size++; 
-            return; 
-        } else { 
-            Node newNode = new Node(data); 
-            newNode.next = this.top; 
-            this.top = newNode; 
-            if(data < this.minStack.top.data) { 
-                Node minNode = new Node(data); 
-                minNode.next = this.minStack.top; 
-                this.minStack.top = minNode; 
-                this.minStack.size++; 
-            }
-            this.size++; 
-            return; 
-        }
-    }
-    
-    public void pop() { 
-        if(this.top == null) return; 
-        
-        if(this.top.data == this.minStack.top.data) { 
-            this.minStack.top = this.minStack.top.next; 
-            this.minStack.size--; 
-        }
-        this.top = this.top.next; 
-        this.size--;
-        return; 
-    }
-    
-    public int size() { 
-        return this.size;    
-    }
-    
-    public Node getMin() { 
-        if(this.minStack.top == null) return null; 
-        return this.minStack.top; 
-    }
-}
-
-class Node { 
-    int data; 
-    Node next; 
-    
-    public Node(int data) { 
-        this.data = data;    
+        this.next = null;
     }
 }
